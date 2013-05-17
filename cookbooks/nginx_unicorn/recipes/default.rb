@@ -6,6 +6,22 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-package "nginx" do
-  action :install
+
+[ "nginx", "monit" ].each do |p|
+  package p do
+    action :install
+  end
+end
+
+[ "nginx", "monit" ].each do |s|
+  service s do
+    action [:start, :enable]
+  end
+
+  cookbook_file "/etc/monit/monitrc" do
+    source "monitrc"
+    mode '0440'
+    owner 'root'
+    group 'root'
+  end
 end
